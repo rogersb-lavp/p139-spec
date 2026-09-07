@@ -1,5 +1,5 @@
 {
-  "name": "@xo-defense/p139-spec",
+  "name": "p139-spec",
   "version": "1.0.0",
   "description": "Deterministic 25-byte connectionless wire standard for emergency hazard alerts.",
   "main": "dist/index.js",
