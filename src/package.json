@@ -1,32 +1,32 @@
 {
-  "name": "p139-spec",
-  "version": "1.0.0",
-  "description": "Deterministic 25-byte connectionless wire standard for emergency hazard alerts.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "prepare": "npm run build"
-  },
-  "keywords": [
-    "p139",
-    "mesh",
-    "ddil",
-    "emergency-response",
-    "telemetry"
-  ],
-  "license": "Apache-2.0",
-  "dependencies": {
-    "express": "^4.19.0",
-    "zod": "^3.22.0"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.4.0"
-  }
+    "name": "p139-spec",
+    "version": "1.0.0",
+    "description": "Deterministic 25-byte connectionless wire standard for emergency hazard alerts.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "prepare": "npm run build"
+    },
+    "keywords": [
+        "p139",
+        "mesh",
+        "ddil",
+        "emergency-response",
+        "telemetry"
+    ],
+    "license": "Apache-2.0",
+    "dependencies": {
+        "express": "^4.19.0",
+        "zod": "^3.22.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.0.0",
+        "typescript": "^5.4.0"
+    }
 }
