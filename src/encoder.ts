@@ -206,6 +206,51 @@ export function encodePacketV2(input: P139PacketInput): Uint8Array {
   return bytes;
 }
 
+/**
+ * Added 9/8 BR for testing ACK
+ * Builds a P139 ACK packet in response to a received hazard packet.
+ * Uses the SAME 25-byte layout as every other P139 packet — no new
+ * fields, no wire format change. The only thing that matters is that
+ * `originalHashedSessionId` is written directly into bytes 2-3
+ * WITHOUT running it through hashSessionId() again — because the
+ * value you received in a decoded packet is already the 16-bit
+ * hashed form. Hashing it a second time would produce a different
+ * number than what the original sender is listening for, breaking
+ * the ability to match the ACK back to the pending send.
+ *
+ * Usage: when you decode a hazard packet with StatusFlags.ACK_REQUIRED
+ * set, call encodeAckPacket(decoded.sessionId) and send the resulting
+ * bytes back over WHATEVER transport you received the original on
+ * (UDP, LoRa, serial — this function has no transport dependency).
+ */
+export function encodeAckPacket(originalHashedSessionId: number, timestamp?: number): Uint8Array {
+    const buffer = new ArrayBuffer(25);
+    const view = new DataView(buffer);
+    const bytes = new Uint8Array(buffer);
+
+    view.setUint8(0, (PROTOCOL_VERSION << 4) | ((MessageType.ACK >> 4) & 0x0F));
+    view.setUint8(1, MessageType.ACK);
+
+    // Echo the received hash directly — do NOT call hashSessionId() here.
+    view.setUint16(2, originalHashedSessionId & 0xFFFF, true);
+
+    // ACK carries no location/hazard payload — zero out the rest.
+    // Still occupies the same 25 bytes; nothing about the schema changes.
+    view.setInt32(4, 0, true);
+    view.setInt32(8, 0, true);
+    view.setUint32(12, timestamp ?? Math.floor(Date.now() / 1000), true);
+    view.setUint16(16, 0, true);
+    view.setUint8(18, 0);
+    view.setUint16(19, 0, true);
+    view.setInt16(21, 0, true);
+    view.setUint8(23, 0);
+
+    const crc = calculateCRC8(bytes.subarray(0, 24));
+    view.setUint8(24, crc);
+
+    return bytes;
+}
+
 export function decodePacket(data: Uint8Array): P139Packet | null {
   if (data.length !== 25) {
     console.error('[P139] Invalid packet length:', data.length);
